@@ -5,6 +5,7 @@ import {
   addDays,
   addHours,
   addMinutes,
+  addWeeks,
   endOfDay,
   endOfWeek,
   format,
@@ -120,7 +121,7 @@ export function Desk({ desk, dates, user }) {
 
   useEffect(() => {
     getBookings().then()
-  }, [])
+  }, [dates])
 
   async function book(date: Date) {
     const day = addHours(date, 12);
@@ -151,7 +152,8 @@ export function Desk({ desk, dates, user }) {
     <div
       className="grid grid-cols-6 divide-x divide-dashed divide-gray-200 group transition-colors hover:bg-gray-100 hover:divide-gray-300 "
       style={{ borderColor: desk.backgroundColor, color: desk.foregroundColor }}>
-      <div className="px-2 py-2 sm:px-4 flex flex-col justify-center bg-gray-50 group-hover:bg-gray-200 transition-colors">
+      <div
+        className="px-2 py-2 sm:px-4 flex flex-col justify-center bg-gray-50 group-hover:bg-gray-200 transition-colors">
         <div className="font-medium text-xs sm:text-base">{desk.name}</div>
         {desk.type === 'ROOM' && (
           <div className="text-xs">Capacity: {desk.capacity}</div>
@@ -252,8 +254,9 @@ function parseUser(email: string) {
 }
 
 export default function Home() {
+  const [date, setDate] = useState(new Date());
   const [desks, setDesks] = useState([]);
-  const dates = getDates(startOfWeek(new Date()), endOfWeek(new Date()));
+  const dates = getDates(startOfWeek(date), endOfWeek(date));
   const [user, setUser] = useState<any>()
 
   async function login() {
@@ -329,6 +332,11 @@ export default function Home() {
 
       <img src="https://static.slab.com/prod/uploads/vm56qp7m/posts/images/tFyD3bZlcqrxDzgUjPG144f0.png"
            className="py-10" />
+
+      <div className="flex justify-between">
+        <button onClick={() => setDate(addWeeks(date, -1))}>Last week</button>
+        <button onClick={() => setDate(addWeeks(date, 1))}>Next week</button>
+      </div>
 
       <div className="grid grid-cols-1 border divide-y divide-dashed divide-gray-200 rounded-lg">
         <div className="grid grid-cols-6 sticky top-0 divide-x divide-dashed border-b bg-gray-50 rounded-t-lg">
